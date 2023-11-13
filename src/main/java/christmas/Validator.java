@@ -28,6 +28,14 @@ public class Validator {
             throwInvalidMenuOrderException("[ERROR] 주문 내역이 비어 있습니다. 다시 입력해 주세요.");
         }
 
+        boolean onlyBeverages = menuOrder.getOrderDetails().keySet().stream()
+                .allMatch(menuItem -> menuPrices.containsKey(menuItem) &&
+                        menuPrices.get(menuItem) <= 5000);
+
+        if (onlyBeverages && menuOrder.getOrderDetails().size() > 0) {
+            throwInvalidMenuOrderException("[ERROR] 음료만 주문 시, 주문할 수 없습니다. 메뉴를 다시 입력해 주세요.");
+        }
+
         int totalOrderAmount = menuOrder.getOrderDetails().entrySet().stream()
                 .mapToInt(entry -> entry.getValue() * menuPrices.get(entry.getKey()))
                 .sum();
@@ -39,8 +47,8 @@ public class Validator {
     }
 
     public void validateQuantity(int quantity) {
-        if (quantity <= 0) {
-            throwInvalidMenuOrderException("[ERROR] 음료의 개수는 1 이상이어야 합니다. 다시 입력해 주세요.");
+        if (quantity < 1) {
+            throw new IllegalArgumentException("[ERROR] 주문 수량은 최소 1 이상이어야 합니다. 다시 입력해 주세요.");
         }
     }
 
@@ -66,4 +74,3 @@ public class Validator {
         throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
     }
 }
-
