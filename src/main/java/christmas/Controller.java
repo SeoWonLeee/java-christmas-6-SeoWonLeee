@@ -39,14 +39,17 @@ public class Controller {
 
             int christmasDiscount = promotion.calculateChristmasDiscount();
             int weekdayDiscount = promotion.calculateWeekdayDiscount(
-                    menuOrder.getOrderDetails().getOrDefault("아이스크림", 0));
+                    menuOrder.getOrderDetails().getOrDefault("아이스크림", 0) +
+                            menuOrder.getOrderDetails().getOrDefault("초코케이크", 0));
             int weekendDiscount = promotion.calculateWeekendDiscount(
-                    menuOrder.getOrderDetails().getOrDefault("티본스테이크", 0));
-            int specialDiscount = promotion.calculateSpecialDiscount(menuOrder.getOrderDetails().containsKey("별"));
+                    menuOrder.getOrderDetails().getOrDefault("티본스테이크", 0) +
+                            menuOrder.getOrderDetails().getOrDefault("바비큐립", 0) +
+                            menuOrder.getOrderDetails().getOrDefault("해산물파스타", 0) +
+                            menuOrder.getOrderDetails().getOrDefault("크리스마스파스타", 0));
+            int specialDiscount = promotion.calculateSpecialDiscount(menuOrder);
             int giftDiscount = promotion.calculateGiftDiscount(totalOrderAmount);
 
-            outputView.printBenefits(christmasDiscount, weekdayDiscount, weekendDiscount, specialDiscount,
-                    giftDiscount);
+            outputView.printBenefits(promotion, menuOrder, weekdayDiscount, weekendDiscount, giftDiscount);
 
             int totalDiscount = discountCalculator.calculateTotalDiscount(menuOrder);
             int totalBenefits = calculateTotalBenefits(totalDiscount, giftDiscount);
@@ -72,7 +75,11 @@ public class Controller {
 
     private String calculateGift(MenuOrder menuOrder) {
         int totalOrderAmount = calculateTotalOrderAmount(menuOrder);
-        return (totalOrderAmount >= 120000) ? "샴페인 1개" : "없음";
+        if (totalOrderAmount >= 120000) {
+            return "샴페인 1개";
+        } else {
+            return "없음";
+        }
     }
 
     private int calculateTotalBenefits(int totalDiscount, int giftDiscount) {
