@@ -5,13 +5,20 @@ import java.util.Map;
 
 public class MenuOrder {
     private final Map<String, Integer> orderDetails;
-
     private final Validator validator;
+    private int visitDate;
 
     public MenuOrder(Menu menu) {
         this.orderDetails = new LinkedHashMap<>();
-
         this.validator = new Validator(menu);
+    }
+
+    public void setVisitDate(int visitDate) {
+        this.visitDate = visitDate;
+    }
+
+    public int getVisitDate() {
+        return visitDate;
     }
 
     public void addOrder(String menuItem, int quantity) {

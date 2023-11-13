@@ -97,7 +97,6 @@ public class Menu {
 
     public int getPrice(String menuItem) {
         try {
-            // 메뉴 유효성 검사
             validator.validateMenu(menuItem);
 
             Map<String, Integer> allMenuPrices = getMenuPrices();
