@@ -74,11 +74,12 @@ public class Controller {
 
     private String calculateGift(MenuOrder menuOrder) {
         int totalOrderAmount = calculateTotalOrderAmount(menuOrder);
+
         if (totalOrderAmount >= 120000) {
             return "샴페인 1개";
-        } else {
-            return "없음";
         }
+
+        return "없음";
     }
 
     private int calculateTotalBenefits(int totalDiscount, int giftDiscount) {

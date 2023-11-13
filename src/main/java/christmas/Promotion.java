@@ -49,8 +49,8 @@ public class Promotion {
     public int calculateGiftDiscount(int totalOrderPrice) {
         if (totalOrderPrice >= 120000) {
             return 25000;
-        } else {
-            return 0;
         }
+        return 0;
     }
+
 }

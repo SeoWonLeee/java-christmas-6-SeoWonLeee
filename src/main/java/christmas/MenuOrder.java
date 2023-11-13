@@ -26,15 +26,12 @@ public class MenuOrder {
             validator.validateQuantity(quantity);
             validator.validateMenu(menuItem);
 
-            if (orderDetails.containsKey(menuItem)) {
-                orderDetails.put(menuItem, orderDetails.get(menuItem) + quantity);
-            } else {
-                orderDetails.put(menuItem, quantity);
-            }
+            orderDetails.put(menuItem, orderDetails.getOrDefault(menuItem, 0) + quantity);
         } catch (IllegalArgumentException e) {
             validator.throwInvalidMenuOrderException(e.getMessage());
         }
     }
+
 
     public Map<String, Integer> getOrderDetails() {
         return new LinkedHashMap<>(orderDetails);

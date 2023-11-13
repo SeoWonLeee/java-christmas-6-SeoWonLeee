@@ -3,6 +3,7 @@ package christmas;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class Menu {
     private final Map<String, Integer> appetizers;
     private final Map<String, Integer> mains;
@@ -81,18 +82,18 @@ public class Menu {
     }
 
     private Map<String, Integer> getCategoryMap(String category) {
-        switch (category) {
-            case "애피타이저":
-                return getAppetizers();
-            case "메인":
-                return getMains();
-            case "디저트":
-                return getDesserts();
-            case "음료":
-                return getBeverages();
-            default:
-                throw new IllegalArgumentException("[ERROR] 유효하지 않은 카테고리입니다. 다시 입력해 주세요.");
+        Map<String, Map<String, Integer>> categoryMap = Map.of(
+                "애피타이저", getAppetizers(),
+                "메인", getMains(),
+                "디저트", getDesserts(),
+                "음료", getBeverages()
+        );
+
+        if (categoryMap.containsKey(category)) {
+            return categoryMap.get(category);
         }
+
+        throw new IllegalArgumentException("[ERROR] 유효하지 않은 카테고리입니다. 다시 입력해 주세요.");
     }
 
     public int getPrice(String menuItem) {
