@@ -1,6 +1,6 @@
 package christmas;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MenuOrder {
@@ -9,7 +9,7 @@ public class MenuOrder {
     private final Validator validator;
 
     public MenuOrder(Menu menu) {
-        this.orderDetails = new HashMap<>();
+        this.orderDetails = new LinkedHashMap<>();
 
         this.validator = new Validator(menu);
     }
@@ -17,7 +17,6 @@ public class MenuOrder {
     public void addOrder(String menuItem, int quantity) {
         try {
             validator.validateQuantity(quantity);
-
             validator.validateMenu(menuItem);
 
             if (orderDetails.containsKey(menuItem)) {
@@ -31,6 +30,6 @@ public class MenuOrder {
     }
 
     public Map<String, Integer> getOrderDetails() {
-        return new HashMap<>(orderDetails);
+        return new LinkedHashMap<>(orderDetails);
     }
 }
