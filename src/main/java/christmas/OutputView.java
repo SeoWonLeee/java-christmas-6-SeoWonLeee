@@ -28,17 +28,23 @@ public class OutputView {
         System.out.println(gift);
     }
 
-    public void printBenefits(int christmasDiscount, int weekdayDiscount, int weekendDiscount,
-                              int specialDiscount, int giftDiscount) {
+    public void printBenefits(Promotion promotion, MenuOrder menuOrder, int weekdayDiscount, int weekendDiscount,
+                              int giftDiscount) {
+        int christmasDiscount = promotion.calculateChristmasDiscount();
+        int specialDiscount = promotion.calculateSpecialDiscount(menuOrder);
+
         System.out.println("\n<혜택 내역>");
-        if (isNoDiscount(christmasDiscount, weekdayDiscount, weekendDiscount, specialDiscount, giftDiscount)) {
-            System.out.println("없음");
-        } else {
+        boolean anyDiscountApplied = (christmasDiscount > 0) || (weekdayDiscount > 0) ||
+                (weekendDiscount > 0) || (specialDiscount > 0) || (giftDiscount > 0);
+
+        if (anyDiscountApplied) {
             printDiscount("크리스마스 디데이 할인", christmasDiscount);
             printDiscount("평일 할인", weekdayDiscount);
             printDiscount("주말 할인", weekendDiscount);
             printDiscount("특별 할인", specialDiscount);
             printDiscount("증정 이벤트", giftDiscount);
+        } else {
+            System.out.println("없음");
         }
     }
 
@@ -52,13 +58,24 @@ public class OutputView {
     }
 
     private void printDiscount(String event, int discountAmount) {
-        String discountString = (discountAmount > 0) ? String.format("-%,d원", discountAmount) : "없음";
+        String discountString;
+        if (discountAmount > 0) {
+            discountString = String.format("-%,d원", discountAmount);
+        } else {
+            discountString = "없음";
+        }
         System.out.println(event + ": " + discountString);
     }
 
     public void printTotalBenefits(int totalBenefits) {
         System.out.println("\n<총혜택 금액>");
-        System.out.println(String.format("-%,d원", totalBenefits));
+        String formattedTotalBenefits;
+        if (totalBenefits < 0) {
+            formattedTotalBenefits = String.format("-%,d원", Math.abs(totalBenefits));
+        } else {
+            formattedTotalBenefits = String.format("%,d원", totalBenefits);
+        }
+        System.out.println(formattedTotalBenefits);
     }
 
     public void printFinalPayment(int finalPayment) {
