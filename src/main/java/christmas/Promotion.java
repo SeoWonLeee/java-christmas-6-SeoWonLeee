@@ -7,15 +7,12 @@ public class Promotion {
     private static final LocalDate CHRISTMAS_START_DATE = LocalDate.of(2023, 12, 1);
     private static final LocalDate CHRISTMAS_END_DATE = LocalDate.of(2023, 12, 25);
 
-    public int calculateChristmasDiscount() {
-        LocalDate currentDate = LocalDate.now();
-
-        if (currentDate.isAfter(CHRISTMAS_START_DATE) && currentDate.isBefore(CHRISTMAS_END_DATE.plusDays(1))) {
-            long daysUntilChristmas = currentDate.until(CHRISTMAS_END_DATE, ChronoUnit.DAYS);
-
+    public int calculateChristmasDiscount(int visitDate) {
+        LocalDate visitLocalDate = LocalDate.of(2023, 1, 1).plusDays(visitDate - 1);
+        if (visitLocalDate.isAfter(CHRISTMAS_START_DATE) && visitLocalDate.isBefore(CHRISTMAS_END_DATE.plusDays(1))) {
+            long daysUntilChristmas = visitLocalDate.until(CHRISTMAS_END_DATE, ChronoUnit.DAYS);
             return (int) Math.min(1000 + (daysUntilChristmas * 100), 3400);
         }
-
         return 0;
     }
 
@@ -39,18 +36,15 @@ public class Promotion {
         return 0;
     }
 
-    public int calculateSpecialDiscount(MenuOrder menuOrder) {
-        LocalDate currentDate = LocalDate.now();
-        int dayOfMonth = currentDate.getDayOfMonth();
-
-        if (currentDate.getMonthValue() == 12 && (dayOfMonth == 3 || dayOfMonth == 10 || dayOfMonth == 17
+    public int calculateSpecialDiscount(int visitDate) {
+        LocalDate visitLocalDate = LocalDate.of(2023, 1, 1).plusDays(visitDate - 1);
+        int dayOfMonth = visitLocalDate.getDayOfMonth();
+        if (visitLocalDate.getMonthValue() == 12 && (dayOfMonth == 3 || dayOfMonth == 10 || dayOfMonth == 17
                 || dayOfMonth == 24 || dayOfMonth == 25 || dayOfMonth == 31)) {
             return 1000;
         }
-
         return 0;
     }
-
 
     public int calculateGiftDiscount(int totalOrderPrice) {
         if (totalOrderPrice >= 120000) {

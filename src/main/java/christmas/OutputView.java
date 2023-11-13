@@ -28,44 +28,36 @@ public class OutputView {
         System.out.println(gift);
     }
 
-    public void printBenefits(Promotion promotion, MenuOrder menuOrder, int weekdayDiscount, int weekendDiscount,
+    public void printBenefits(int christmasDiscount, int specialDiscount, int weekdayDiscount, int weekendDiscount,
                               int giftDiscount) {
-        int christmasDiscount = promotion.calculateChristmasDiscount();
-        int specialDiscount = promotion.calculateSpecialDiscount(menuOrder);
 
         System.out.println("\n<혜택 내역>");
-        boolean anyDiscountApplied = (christmasDiscount > 0) || (weekdayDiscount > 0) ||
-                (weekendDiscount > 0) || (specialDiscount > 0) || (giftDiscount > 0);
 
-        if (anyDiscountApplied) {
-            printDiscount("크리스마스 디데이 할인", christmasDiscount);
-            printDiscount("평일 할인", weekdayDiscount);
-            printDiscount("주말 할인", weekendDiscount);
-            printDiscount("특별 할인", specialDiscount);
-            printDiscount("증정 이벤트", giftDiscount);
-        } else {
+        boolean anyDiscountApplied = false;
+
+        anyDiscountApplied |= printDiscountIfApplicable("크리스마스 디데이 할인", christmasDiscount);
+        anyDiscountApplied |= printDiscountIfApplicable("평일 할인", weekdayDiscount);
+        anyDiscountApplied |= printDiscountIfApplicable("주말 할인", weekendDiscount);
+        anyDiscountApplied |= printDiscountIfApplicable("특별 할인", specialDiscount);
+        anyDiscountApplied |= printDiscountIfApplicable("증정 이벤트", giftDiscount);
+
+        if (!anyDiscountApplied) {
             System.out.println("없음");
         }
     }
 
-    private boolean isNoDiscount(int... discounts) {
-        for (int discount : discounts) {
-            if (discount > 0) {
-                return false;
-            }
+    private boolean printDiscountIfApplicable(String event, int discountAmount) {
+        if (discountAmount > 0) {
+            printDiscount(event, discountAmount);
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void printDiscount(String event, int discountAmount) {
-        String discountString;
-        if (discountAmount > 0) {
-            discountString = String.format("-%,d원", discountAmount);
-        } else {
-            discountString = "없음";
-        }
-        System.out.println(event + ": " + discountString);
+        System.out.println(event + ": -" + String.format("%,d원", discountAmount));
     }
+
 
     public void printTotalBenefits(int totalBenefits) {
         System.out.println("\n<총혜택 금액>");

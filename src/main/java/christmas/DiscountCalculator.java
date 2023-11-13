@@ -4,7 +4,6 @@ import java.util.Map;
 
 public class DiscountCalculator {
     private final Promotion promotion;
-
     private final Menu menu;
 
     public DiscountCalculator(Promotion promotion, Menu menu) {
@@ -24,11 +23,12 @@ public class DiscountCalculator {
                 .mapToInt(Map.Entry::getValue)
                 .sum();
 
-        return promotion.calculateChristmasDiscount() +
+        int visitDate = menuOrder.getVisitDate();
+
+        return promotion.calculateChristmasDiscount(visitDate) +
                 promotion.calculateWeekdayDiscount(dessertCount) +
                 promotion.calculateWeekendDiscount(mainCount) +
-                promotion.calculateSpecialDiscount(menuOrder) +
-                promotion.calculateGiftDiscount(calculateTotalOrderPrice(menuOrder, menu));
+                promotion.calculateSpecialDiscount(visitDate);
     }
 
     private int calculateTotalOrderPrice(MenuOrder menuOrder, Menu menu) {
@@ -37,8 +37,8 @@ public class DiscountCalculator {
                 .sum();
     }
 
-    public int calculateTotalBenefits(int totalDiscount, int giftPrice) {
-        return totalDiscount + giftPrice;
+    public int calculateTotalBenefits(int totalDiscount, int giftDiscount) {
+        return totalDiscount + giftDiscount;
     }
 
     public int calculateFinalPayment(int totalOrderPrice, int totalDiscount) {

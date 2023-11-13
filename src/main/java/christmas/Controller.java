@@ -4,7 +4,6 @@ public class Controller {
     private final Menu menu;
     private final InputView inputView;
     private final OutputView outputView;
-    private final Validator validator;
     private final Promotion promotion;
     private final DiscountCalculator discountCalculator;
     private final EventBadge eventBadge;
@@ -13,7 +12,6 @@ public class Controller {
         this.menu = new Menu();
         this.inputView = new InputView(menu);
         this.outputView = outputView;
-        this.validator = new Validator(menu);
         this.promotion = new Promotion();
         this.discountCalculator = new DiscountCalculator(promotion, menu);
         this.eventBadge = new EventBadge();
@@ -24,8 +22,8 @@ public class Controller {
             outputView.printGreeting();
 
             int visitDate = inputView.readDate();
-
             MenuOrder menuOrder = inputView.readMenuOrder(menu);
+            menuOrder.setVisitDate(visitDate);
 
             outputView.printEventPreview(visitDate);
 
@@ -37,7 +35,7 @@ public class Controller {
             String gift = calculateGift(menuOrder);
             outputView.printGift(gift);
 
-            int christmasDiscount = promotion.calculateChristmasDiscount();
+            int christmasDiscount = promotion.calculateChristmasDiscount(visitDate);
             int weekdayDiscount = promotion.calculateWeekdayDiscount(
                     menuOrder.getOrderDetails().getOrDefault("아이스크림", 0) +
                             menuOrder.getOrderDetails().getOrDefault("초코케이크", 0));
@@ -46,10 +44,11 @@ public class Controller {
                             menuOrder.getOrderDetails().getOrDefault("바비큐립", 0) +
                             menuOrder.getOrderDetails().getOrDefault("해산물파스타", 0) +
                             menuOrder.getOrderDetails().getOrDefault("크리스마스파스타", 0));
-            int specialDiscount = promotion.calculateSpecialDiscount(menuOrder);
+            int specialDiscount = promotion.calculateSpecialDiscount(visitDate);
             int giftDiscount = promotion.calculateGiftDiscount(totalOrderAmount);
 
-            outputView.printBenefits(promotion, menuOrder, weekdayDiscount, weekendDiscount, giftDiscount);
+            outputView.printBenefits(christmasDiscount, specialDiscount, weekdayDiscount, weekendDiscount,
+                    giftDiscount);
 
             int totalDiscount = discountCalculator.calculateTotalDiscount(menuOrder);
             int totalBenefits = calculateTotalBenefits(totalDiscount, giftDiscount);
