@@ -27,7 +27,7 @@ public class DiscountCalculator {
         return promotion.calculateChristmasDiscount() +
                 promotion.calculateWeekdayDiscount(dessertCount) +
                 promotion.calculateWeekendDiscount(mainCount) +
-                promotion.calculateSpecialDiscount(menuOrder.getOrderDetails().containsKey("별")) +
+                promotion.calculateSpecialDiscount(menuOrder) +
                 promotion.calculateGiftDiscount(calculateTotalOrderPrice(menuOrder, menu));
     }
 
