@@ -1,5 +1,7 @@
-package christmas;
+package christmas.util;
 
+import christmas.domian.Menu;
+import christmas.domian.MenuOrder;
 import java.util.Map;
 
 public class Validator {

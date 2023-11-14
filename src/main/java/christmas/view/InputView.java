@@ -1,6 +1,9 @@
-package christmas;
+package christmas.view;
 
 import camp.nextstep.edu.missionutils.Console;
+import christmas.domian.Menu;
+import christmas.domian.MenuOrder;
+import christmas.util.Validator;
 
 public class InputView {
     private final Validator validator;

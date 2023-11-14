@@ -1,9 +1,11 @@
-package christmas;
+package christmas.logic;
 
+import christmas.domian.Menu;
+import christmas.domian.MenuOrder;
 import java.time.LocalDate;
 import java.util.Map;
 
-class DiscountCalculator {
+public class DiscountCalculator {
     private final Promotion promotion;
     private final Menu menu;
 

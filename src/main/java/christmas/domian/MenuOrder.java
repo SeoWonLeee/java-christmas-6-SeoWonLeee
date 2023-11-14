@@ -1,5 +1,6 @@
-package christmas;
+package christmas.domian;
 
+import christmas.util.Validator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

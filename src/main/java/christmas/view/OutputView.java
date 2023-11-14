@@ -1,5 +1,6 @@
-package christmas;
+package christmas.view;
 
+import christmas.domian.MenuOrder;
 import java.util.Map;
 
 public class OutputView {
