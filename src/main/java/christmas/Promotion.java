@@ -1,56 +1,81 @@
 package christmas;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class Promotion {
     private static final LocalDate CHRISTMAS_START_DATE = LocalDate.of(2023, 12, 1);
     private static final LocalDate CHRISTMAS_END_DATE = LocalDate.of(2023, 12, 25);
+    private static final int MAX_CHRISTMAS_DISCOUNT = 3400;
+    private static final int WEEKDAY_DISCOUNT_AMOUNT = 2023;
+    private static final int GIFT_DISCOUNT_THRESHOLD = 120000;
+    private static final int GIFT_DISCOUNT_AMOUNT = 25000;
+
 
     public int calculateChristmasDiscount(int visitDate) {
-        LocalDate visitLocalDate = LocalDate.of(2023, 1, 1).plusDays(visitDate - 1);
-        if (visitLocalDate.isAfter(CHRISTMAS_START_DATE) && visitLocalDate.isBefore(CHRISTMAS_END_DATE.plusDays(1))) {
-            long daysUntilChristmas = visitLocalDate.until(CHRISTMAS_END_DATE, ChronoUnit.DAYS);
-            return (int) Math.min(1000 + (daysUntilChristmas * 100), 3400);
+        LocalDate visitLocalDate = calculateLocalDate(visitDate);
+
+        if (isDateInRange(visitLocalDate, CHRISTMAS_START_DATE, CHRISTMAS_END_DATE)) {
+            long daysUntilChristmas = CHRISTMAS_START_DATE.until(visitLocalDate).getDays();
+            int progressiveDiscount = (int) Math.min(1000 + (daysUntilChristmas * 100), MAX_CHRISTMAS_DISCOUNT);
+            return Math.max(0, progressiveDiscount);
         }
         return 0;
     }
 
-    public int calculateWeekdayDiscount(int dessertCount) {
-        LocalDate currentDate = LocalDate.now();
-
-        if (currentDate.getDayOfWeek().getValue() >= 1 && currentDate.getDayOfWeek().getValue() <= 4) {
-            return dessertCount * 2023;
+    public int calculateWeekdayDiscount(LocalDate currentDate, int dessertCount) {
+        if (isWeekday(currentDate)) {
+            return dessertCount * WEEKDAY_DISCOUNT_AMOUNT;
         }
-
         return 0;
     }
 
-    public int calculateWeekendDiscount(int mainCount) {
-        LocalDate currentDate = LocalDate.now();
-
-        if (currentDate.getDayOfWeek().getValue() >= 5 && currentDate.getDayOfWeek().getValue() <= 6) {
-            return mainCount * 2023;
+    public int calculateWeekendDiscount(LocalDate currentDate, int mainCount) {
+        if (isWeekend(currentDate)) {
+            return mainCount * WEEKDAY_DISCOUNT_AMOUNT;
         }
-
         return 0;
     }
 
     public int calculateSpecialDiscount(int visitDate) {
-        LocalDate visitLocalDate = LocalDate.of(2023, 1, 1).plusDays(visitDate - 1);
+        LocalDate visitLocalDate = calculateLocalDate(visitDate);
         int dayOfMonth = visitLocalDate.getDayOfMonth();
-        if (visitLocalDate.getMonthValue() == 12 && (dayOfMonth == 3 || dayOfMonth == 10 || dayOfMonth == 17
-                || dayOfMonth == 24 || dayOfMonth == 25 || dayOfMonth == 31)) {
+        if (isDateInDecember(visitLocalDate) && isSpecialDiscountDay(dayOfMonth)) {
             return 1000;
         }
         return 0;
     }
 
-    public int calculateGiftDiscount(int totalOrderPrice) {
-        if (totalOrderPrice >= 120000) {
-            return 25000;
+    public int calculateGiftPromotion(int totalOrderPrice) {
+        if (totalOrderPrice >= GIFT_DISCOUNT_THRESHOLD) {
+            return GIFT_DISCOUNT_AMOUNT;
         }
         return 0;
     }
 
+    private LocalDate calculateLocalDate(int visitDate) {
+        return LocalDate.of(2023, 12, 1).plusDays(visitDate - 1);
+    }
+
+    private boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
+        return date.isAfter(startDate) && date.isBefore(endDate.plusDays(1));
+    }
+
+    private boolean isWeekday(LocalDate date) {
+        int dayOfWeek = date.getDayOfWeek().getValue();
+        return dayOfWeek >= 1 && dayOfWeek <= 4;
+    }
+
+    private boolean isWeekend(LocalDate date) {
+        int dayOfWeek = date.getDayOfWeek().getValue();
+        return dayOfWeek >= 5 && dayOfWeek <= 6;
+    }
+
+    private boolean isDateInDecember(LocalDate date) {
+        return date.getMonthValue() == 12;
+    }
+
+    private boolean isSpecialDiscountDay(int dayOfMonth) {
+        return dayOfMonth == 3 || dayOfMonth == 10 || dayOfMonth == 17 || dayOfMonth == 24 || dayOfMonth == 25
+                || dayOfMonth == 31;
+    }
 }
