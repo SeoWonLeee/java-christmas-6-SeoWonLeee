@@ -58,16 +58,14 @@ public class OutputView {
         System.out.println(event + ": -" + String.format("%,d원", discountAmount));
     }
 
-
     public void printTotalBenefits(int totalBenefits) {
         System.out.println("\n<총혜택 금액>");
 
-        String formattedTotalBenefits = String.format("%,d원", totalBenefits);
-        if (totalBenefits < 0) {
-            formattedTotalBenefits = String.format("-%s", formattedTotalBenefits.substring(1));
+        if (totalBenefits == 0) {
+            System.out.println("0원");
+            return;
         }
-
-        System.out.println(formattedTotalBenefits);
+        System.out.println(String.format("-%,d원", Math.abs(totalBenefits)));
     }
 
     public void printFinalPayment(int finalPayment) {

@@ -3,7 +3,6 @@ package christmas;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class Menu {
     private final Map<String, Integer> appetizers;
     private final Map<String, Integer> mains;

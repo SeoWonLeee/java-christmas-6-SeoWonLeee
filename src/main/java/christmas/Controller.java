@@ -1,5 +1,7 @@
 package christmas;
 
+import java.time.LocalDate;
+
 public class Controller {
     private final Menu menu;
     private final InputView inputView;
@@ -8,8 +10,8 @@ public class Controller {
     private final DiscountCalculator discountCalculator;
     private final EventBadge eventBadge;
 
-    public Controller(OutputView outputView) {
-        this.menu = new Menu();
+    public Controller(Menu menu, OutputView outputView) {
+        this.menu = menu;
         this.inputView = new InputView(menu);
         this.outputView = outputView;
         this.promotion = new Promotion();
@@ -26,7 +28,6 @@ public class Controller {
             menuOrder.setVisitDate(visitDate);
 
             outputView.printEventPreview(visitDate);
-
             outputView.printMenuOrder(menuOrder);
 
             int totalOrderAmount = calculateTotalOrderAmount(menuOrder);
@@ -35,17 +36,18 @@ public class Controller {
             String gift = calculateGift(menuOrder);
             outputView.printGift(gift);
 
+            LocalDate currentDate = LocalDate.now();
             int christmasDiscount = promotion.calculateChristmasDiscount(visitDate);
-            int weekdayDiscount = promotion.calculateWeekdayDiscount(
+            int weekdayDiscount = promotion.calculateWeekdayDiscount(currentDate,
                     menuOrder.getOrderDetails().getOrDefault("아이스크림", 0) +
                             menuOrder.getOrderDetails().getOrDefault("초코케이크", 0));
-            int weekendDiscount = promotion.calculateWeekendDiscount(
+            int weekendDiscount = promotion.calculateWeekendDiscount(currentDate,
                     menuOrder.getOrderDetails().getOrDefault("티본스테이크", 0) +
                             menuOrder.getOrderDetails().getOrDefault("바비큐립", 0) +
                             menuOrder.getOrderDetails().getOrDefault("해산물파스타", 0) +
                             menuOrder.getOrderDetails().getOrDefault("크리스마스파스타", 0));
             int specialDiscount = promotion.calculateSpecialDiscount(visitDate);
-            int giftDiscount = promotion.calculateGiftDiscount(totalOrderAmount);
+            int giftDiscount = promotion.calculateGiftPromotion(totalOrderAmount);
 
             outputView.printBenefits(christmasDiscount, specialDiscount, weekdayDiscount, weekendDiscount,
                     giftDiscount);
@@ -67,9 +69,7 @@ public class Controller {
     }
 
     private int calculateTotalOrderAmount(MenuOrder menuOrder) {
-        return menuOrder.getOrderDetails().entrySet().stream()
-                .mapToInt(entry -> entry.getValue() * menu.getPrice(entry.getKey()))
-                .sum();
+        return menuOrder.calculateTotalOrderAmount(menu);
     }
 
     private String calculateGift(MenuOrder menuOrder) {

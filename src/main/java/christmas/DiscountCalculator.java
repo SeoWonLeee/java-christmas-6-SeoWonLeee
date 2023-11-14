@@ -1,8 +1,9 @@
 package christmas;
 
+import java.time.LocalDate;
 import java.util.Map;
 
-public class DiscountCalculator {
+class DiscountCalculator {
     private final Promotion promotion;
     private final Menu menu;
 
@@ -23,12 +24,14 @@ public class DiscountCalculator {
                 .mapToInt(Map.Entry::getValue)
                 .sum();
 
-        int visitDate = menuOrder.getVisitDate();
+        LocalDate currentDate = LocalDate.now();
 
-        return promotion.calculateChristmasDiscount(visitDate) +
-                promotion.calculateWeekdayDiscount(dessertCount) +
-                promotion.calculateWeekendDiscount(mainCount) +
-                promotion.calculateSpecialDiscount(visitDate);
+        int christmasDiscount = promotion.calculateChristmasDiscount(menuOrder.getVisitDate());
+        int weekdayDiscount = promotion.calculateWeekdayDiscount(currentDate, dessertCount);
+        int weekendDiscount = promotion.calculateWeekendDiscount(currentDate, mainCount);
+        int specialDiscount = promotion.calculateSpecialDiscount(menuOrder.getVisitDate());
+
+        return christmasDiscount + weekdayDiscount + weekendDiscount + specialDiscount;
     }
 
     private int calculateTotalOrderPrice(MenuOrder menuOrder, Menu menu) {

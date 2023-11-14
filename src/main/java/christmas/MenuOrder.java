@@ -32,6 +32,11 @@ public class MenuOrder {
         }
     }
 
+    public int calculateTotalOrderAmount(Menu menu) {
+        return orderDetails.entrySet().stream()
+                .mapToInt(entry -> entry.getValue() * menu.getPrice(entry.getKey()))
+                .sum();
+    }
 
     public Map<String, Integer> getOrderDetails() {
         return new LinkedHashMap<>(orderDetails);
