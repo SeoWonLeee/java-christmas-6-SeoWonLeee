@@ -5,9 +5,11 @@ import java.util.Map;
 public class Validator {
     private static final int MAX_MENU_QUANTITY = 20;
     private final Map<String, Integer> menuPrices;
+    private final Menu menu;
 
     public Validator(Menu menu) {
         this.menuPrices = menu.getMenuPrices();
+        this.menu = menu;
     }
 
     public int validateDate(String input) {
@@ -23,17 +25,17 @@ public class Validator {
         }
     }
 
-    public void validateMenuOrder(Menu menu, MenuOrder menuOrder) {
+    public void validateMenuOrder(MenuOrder menuOrder) {
         if (menuOrder.getOrderDetails().isEmpty()) {
             throwInvalidMenuOrderException("[ERROR] 주문 내역이 비어 있습니다. 다시 입력해 주세요.");
         }
 
         boolean onlyBeverages = menuOrder.getOrderDetails().keySet().stream()
                 .allMatch(menuItem -> menuPrices.containsKey(menuItem) &&
-                        menuPrices.get(menuItem) <= 5000);
+                        menu.getItemType(menuItem) == Menu.ItemType.BEVERAGE);
 
         if (onlyBeverages && menuOrder.getOrderDetails().size() > 0) {
-            throwInvalidMenuOrderException("[ERROR] 음료만 주문 시, 주문할 수 없습니다. 메뉴를 다시 입력해 주세요.");
+            throw new IllegalArgumentException("[ERROR] 음료만 주문 시, 주문할 수 없습니다. 메뉴를 다시 입력해 주세요.");
         }
 
         int totalOrderAmount = menuOrder.getOrderDetails().entrySet().stream()

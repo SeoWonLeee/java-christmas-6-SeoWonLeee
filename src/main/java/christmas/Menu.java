@@ -11,6 +11,10 @@ public class Menu {
 
     private final Validator validator;
 
+    public enum ItemType {
+        APPETIZER, MAIN, DESSERT, BEVERAGE
+    }
+
     public Menu() {
         this.appetizers = initializeAppetizers();
         this.mains = initializeMains();
@@ -114,5 +118,19 @@ public class Menu {
         allMenuPrices.putAll(getDesserts());
         allMenuPrices.putAll(getBeverages());
         return allMenuPrices;
+    }
+
+    public ItemType getItemType(String menuItem) {
+        if (appetizers.containsKey(menuItem)) {
+            return ItemType.APPETIZER;
+        } else if (mains.containsKey(menuItem)) {
+            return ItemType.MAIN;
+        } else if (desserts.containsKey(menuItem)) {
+            return ItemType.DESSERT;
+        } else if (beverages.containsKey(menuItem)) {
+            return ItemType.BEVERAGE;
+        }
+
+        throw new IllegalArgumentException("[ERROR] 유효하지 않은 메뉴입니다. 다시 입력해 주세요.");
     }
 }

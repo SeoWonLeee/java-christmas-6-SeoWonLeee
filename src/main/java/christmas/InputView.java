@@ -38,7 +38,7 @@ public class InputView {
                 menuOrder.addOrder(menuItem, quantity);
             }
 
-            validator.validateMenuOrder(menu, menuOrder);
+            validator.validateMenuOrder(menuOrder);
 
             return menuOrder;
         } catch (NumberFormatException e) {
